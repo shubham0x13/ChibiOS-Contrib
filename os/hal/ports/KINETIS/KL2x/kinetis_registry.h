@@ -201,6 +201,9 @@
 #define KINETIS_USB0_IS_USBOTG      FALSE
 #define KINETIS_HAS_USB_CLOCK_RECOVERY TRUE
 
+/* EFL attributes.*/
+#define KINETIS_FLASH_SECTOR_SIZE       1024
+
 /*===========================================================================*/
 /* KL27Zxxx (MKL27Z128* and MKL27Z256*) specific                             */
 /*===========================================================================*/
