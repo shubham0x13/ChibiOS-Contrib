@@ -334,6 +334,10 @@ void i2c_lld_start(I2CDriver *i2cp) {
   }
 
   config_frequency(i2cp);
+  /* Clear the slave address, as NXP's SDK does when it initializes the
+     module: on parts that boot from ROM, A1 can keep the value left by the
+     ROM bootloader (for example ERR008594 of the MCX C4x).*/
+  i2cp->i2c->A1 = 0;
   i2cp->i2c->C1 = I2Cx_C1_IICEN | I2Cx_C1_IICIE; // reset I2C, enable interrupts
   i2cp->i2c->S = I2Cx_S_IICIF | I2Cx_S_ARBL; // clear status flags just in case
   i2cp->intstate = STATE_STOP; // internal state
