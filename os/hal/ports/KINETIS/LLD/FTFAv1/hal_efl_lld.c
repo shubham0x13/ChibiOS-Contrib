@@ -134,8 +134,11 @@ static bool kinetis_ftfa_execute(EFlashDriver *devp) {
   osalSysUnlock();
 
   /* The flash memory controller caches flash contents, the cache is cleared
-     so that reads return the new contents.*/
+     so that reads return the new contents, with memory barriers as in NXP's
+     SDK.*/
   MCM->PLACR |= MCM_PLACR_CFCC;
+  __ISB();
+  __DSB();
 
   return (flash->FSTAT & (KINETIS_FTFA_FSTAT_ERRORS |
                           FTFA_FSTAT_MGSTAT0)) == 0U;
@@ -157,6 +160,7 @@ static bool kinetis_ftfa_execute(EFlashDriver *devp) {
 void efl_lld_init(void) {
 
   efl_lld_descriptor.size          = kinetis_flash_size();
+  osalDbgAssert(efl_lld_descriptor.size != 0U, "unknown flash size");
   efl_lld_descriptor.sectors_count = efl_lld_descriptor.size /
                                      KINETIS_FLASH_SECTOR_SIZE;
 
